@@ -23,9 +23,13 @@ def _tr_is_alt_form(tr_soup):
     return (not td[0].has_attr('rowspan'))
 
 def _make_entry_from_tr(tr_soup):
-    td2 = tr_soup.find_all('td')[2]
-    a = td2.a
+    tds = tr_soup.find_all('td')
+
+    num_text = tds[0].text
+
+    a = tds[2].a
     return {
+        'num': int(num_text[1:]),
         'name': a.text,
         'link': URL_BASE_LINK_ADDER + a.get('href'),
     }
