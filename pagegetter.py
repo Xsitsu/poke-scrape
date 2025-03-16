@@ -1,10 +1,13 @@
 import os
+import shutil
 import requests
 
 PAGE_CACHE_PATH = os.path.expanduser("~/.poke-scrape/cache/")
 URL_BASE = "https://bulbapedia.bulbagarden.net/wiki/"
 URL_NATIONAL_DEX = "https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_National_Pok%C3%A9dex_number"
 
+def clean_cache():
+    shutil.rmtree(PAGE_CACHE_PATH)
 
 def get_page(url):
     os.makedirs(PAGE_CACHE_PATH, exist_ok=True)

@@ -1,7 +1,26 @@
 #!/usr/bin/python3
 
+import sys
+import argparse
+
 import pagegetter
 import parser
+
+
+
+ap = argparse.ArgumentParser()
+ap.add_argument('-c', '--clean', help='clean the cache', action='store_true')
+args = ap.parse_args()
+
+
+
+if args.clean:
+    print("Cleaning cache")
+    pagegetter.clean_cache()
+    sys.exit()
+
+
+
 
 data = pagegetter.get_page(pagegetter.URL_NATIONAL_DEX)
 
