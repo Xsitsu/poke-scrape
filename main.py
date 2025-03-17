@@ -13,7 +13,6 @@ ap.add_argument('-c', '--clean', help='clean the cache', action='store_true')
 args = ap.parse_args()
 
 
-
 if args.clean:
     print("Cleaning cache")
     pagegetter.clean_cache()
@@ -21,13 +20,12 @@ if args.clean:
 
 
 
+check_num = 176
 
 data = pagegetter.get_page(pagegetter.URL_NATIONAL_DEX)
+nat_parser = parser.NationalDexListParser(data)
+pokemon_list = nat_parser.make_pokemon_list()
 
-regional_lists = parser.parse_national_dex_page_into_regional_lists(data)
-
-for i in range(4):
-    entries = parser.parse_regional_dex_list_into_entries(regional_lists[i])
-    print("Region:", i)
-    for entry in entries:
-        print("Pokemon:", entry)
+for pokemon in pokemon_list:
+    if pokemon.num == check_num:
+        print(pokemon)
