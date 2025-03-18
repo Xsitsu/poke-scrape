@@ -10,7 +10,12 @@ import parser
 
 ap = argparse.ArgumentParser()
 ap.add_argument('-c', '--clean', help='clean the cache', action='store_true')
+ap.add_argument('-p', '--pokemon', help='Pokemon Number (national dex) to lookup')
+
+
+
 args = ap.parse_args()
+
 
 
 if args.clean:
@@ -19,8 +24,11 @@ if args.clean:
     sys.exit()
 
 
+check_num = 25
+if args.pokemon:
+    check_num = int(args.pokemon)
 
-check_num = 176
+
 
 data = pagegetter.get_page(pagegetter.URL_NATIONAL_DEX)
 nat_parser = parser.NationalDexListParser(data)

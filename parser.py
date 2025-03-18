@@ -20,7 +20,7 @@ class NationalDexListParser:
         return pokemon_list
 
     def _parse_national_dex_page_into_regional_lists(self):
-        soup = BeautifulSoup(self.page, 'html.parser')
+        soup = BeautifulSoup(self.page_data, 'html.parser')
 
         regional_lists = list()
 
