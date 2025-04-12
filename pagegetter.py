@@ -32,3 +32,8 @@ def get_page(url):
             return response.text
         
     return ""
+
+ROMAN_NUMERAL_LOOKUP = ['N/A', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX']
+def construct_learnset_page_url_for_pokemon(pokemon_page, gen_number):
+    roman_numeral_string = ROMAN_NUMERAL_LOOKUP[gen_number]
+    return f"{pokemon_page}/Generation_{roman_numeral_string}_learnset"

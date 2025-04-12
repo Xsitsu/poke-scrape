@@ -1,14 +1,16 @@
 from bs4 import BeautifulSoup
 
 from pokemon import Pokemon
+import pagegetter
 
 URL_BASE_LINK_ADDER = "https://bulbapedia.bulbagarden.net"
 
 
 
 class NationalDexListParser:
-    def __init__(self, page_data):
+    def __init__(self, page_data, generation_num):
         self.page_data = page_data
+        self.generation_num = generation_num
     
     def make_pokemon_list(self):
         pokemon_list = list()
@@ -48,7 +50,8 @@ class NationalDexListParser:
         num = int(num_text[1:])
         name = a.text
         link = URL_BASE_LINK_ADDER + a.get('href')
-        return Pokemon(num, name, link)
+        learnset_link = pagegetter.construct_learnset_page_url_for_pokemon(link, self.generation_num)
+        return Pokemon(num, name, link, learnset_link)
 
     def _parse_regional_dex_list_into_entries(self, regional_dex_soup):
         entry_list = list()
