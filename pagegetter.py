@@ -9,10 +9,16 @@ URL_NATIONAL_DEX = "https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon
 def clean_cache():
     shutil.rmtree(PAGE_CACHE_PATH)
 
+def _url_to_cache_page_name(url):
+    file_name = "page_" + url.replace(URL_BASE, "")
+    file_name = file_name.replace("/", "_")
+    return file_name
+
+
 def get_page(url):
     os.makedirs(PAGE_CACHE_PATH, exist_ok=True)
 
-    file_name = "page_" + url.replace(URL_BASE, "")
+    file_name = _url_to_cache_page_name(url)
     file_path = PAGE_CACHE_PATH + file_name
 
     if os.path.exists(file_path):

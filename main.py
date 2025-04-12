@@ -45,3 +45,7 @@ for pokemon in pokemon_list:
         print(pokemon)
         print(pokemon.page_link)
         print(pokemon.learnset_link)
+
+        learnset_page_data = pagegetter.get_page(pokemon.learnset_link)
+        learnset = parser.LearnsetParser(learnset_page_data).make_learnset()
+        print(learnset)

@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup
 
 from pokemon import Pokemon
+import learnset
+import move
 import pagegetter
 
 URL_BASE_LINK_ADDER = "https://bulbapedia.bulbagarden.net"
@@ -62,3 +64,65 @@ class NationalDexListParser:
                 entry_list.append(self._make_pokemon_from_tr(tr))
 
         return entry_list
+
+
+class LearnsetParser:
+    def __init__(self, page_data):
+        self.page_data = page_data
+    
+    def make_learnset(self):
+        soup = BeautifulSoup(self.page_data, 'html.parser')
+
+        sortable_tables = list()
+
+        tables = soup.find_all('table')
+        for table in tables:
+            if table.has_attr('class'):
+                print(f"table with class: '{table['class']}'")
+                if table['class'][0] == 'sortable':
+                    sortable_tables.append(table)
+                    print("adding sortable table~!")
+        
+        table_rows = sortable_tables[0].tbody.find_all('tr')[1:]
+
+        learn_set = learnset.Learnset()
+        for tr in table_rows:
+            learn_set.level_up.append(self._make_level_up_entry(tr))
+        
+        return learn_set
+
+
+    def _get_move_start_index(self, tds):
+        index = 0
+        for td_soup in tds:
+            if len(td_soup.find_all('a')) > 0:
+                return index
+            index += 1
+        raise Exception('Could not find start of move in entry!')
+
+
+    def _extract_level_from_td(self, td):
+        return td.span.text
+
+    def _make_move_from_td_list(self, tds):
+        move_name = tds[0].find_all('span')[0].text
+        move_type = tds[1].find_all('span')[0].text
+        power = tds[2].find_all('span')[0].text
+        accuracy = tds[3].find_all('span')[0].text
+        pp = tds[4].text
+
+        return move.Move(move_name, move_type, power, accuracy, pp)
+
+
+    def _make_level_up_entry(self, tr_soup):
+        tds = tr_soup.find_all('td')
+        move_start_index = self._get_move_start_index(tds)
+        if move_start_index == None:
+            return
+        
+        level_list = list()
+        for i in range(move_start_index):
+            level_list.append(self._extract_level_from_td(tds[i]))
+        
+        move = self._make_move_from_td_list(tds[move_start_index:])
+        return learnset.LevelUpEntry(level_list, move)
