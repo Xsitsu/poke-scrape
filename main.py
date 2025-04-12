@@ -9,9 +9,9 @@ import parser
 
 
 ap = argparse.ArgumentParser()
+ap.add_argument('pokemon', help='Pokemon to lookup. Takes either name or Nat. Dex number')
 ap.add_argument('generation', help='Generation to check against. (1~9)')
 ap.add_argument('-c', '--clean', help='clean the cache', action='store_true')
-ap.add_argument('-p', '--pokemon', help='Pokemon Number (national dex) to lookup')
 
 
 
@@ -30,18 +30,22 @@ if args.clean:
     sys.exit()
 
 
-check_num = 25
+check_val = 25
 if args.pokemon:
-    check_num = int(args.pokemon)
-
+    try:
+        check_val = int(args.pokemon)
+    except ValueError:
+        check_val = args.pokemon
 
 
 data = pagegetter.get_page(pagegetter.URL_NATIONAL_DEX)
 nat_parser = parser.NationalDexListParser(data, args.generation)
 pokemon_list = nat_parser.make_pokemon_list()
 
+did_process = False
 for pokemon in pokemon_list:
-    if pokemon.num == check_num:
+    if pokemon.num == check_val or pokemon.name == check_val:
+        did_process = True
         print(pokemon)
         print(pokemon.page_link)
         print(pokemon.learnset_link)
@@ -51,3 +55,6 @@ for pokemon in pokemon_list:
         print("Level Up")
         for entry in learnset.level_up:
             print(entry)
+
+if not did_process:
+    raise Exception("Pokemon does not exist!")
