@@ -7,4 +7,4 @@ class Move:
         self.pp = pp
 
     def __str__(self):
-        return f"Move(name={self.name}, type={self.type}, power={self.power}, accuracy={self.accuracy}, pp={self.pp})"
+        return f"Move(name='{self.name}', type='{self.type}', power='{self.power}', accuracy='{self.accuracy}', pp='{self.pp}')"

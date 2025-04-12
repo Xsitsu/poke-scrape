@@ -78,10 +78,8 @@ class LearnsetParser:
         tables = soup.find_all('table')
         for table in tables:
             if table.has_attr('class'):
-                print(f"table with class: '{table['class']}'")
                 if table['class'][0] == 'sortable':
                     sortable_tables.append(table)
-                    print("adding sortable table~!")
         
         table_rows = sortable_tables[0].tbody.find_all('tr')[1:]
 
@@ -104,12 +102,18 @@ class LearnsetParser:
     def _extract_level_from_td(self, td):
         return td.span.text
 
+    def _extract_text_from_td(self, td):
+        spans = td.find_all('span')
+        if len(spans) > 0:
+            return spans[0].text.replace('\n', '')
+        return td.text.replace('\n', '')
+
     def _make_move_from_td_list(self, tds):
-        move_name = tds[0].find_all('span')[0].text
-        move_type = tds[1].find_all('span')[0].text
-        power = tds[2].find_all('span')[0].text
-        accuracy = tds[3].find_all('span')[0].text
-        pp = tds[4].text
+        move_name = self._extract_text_from_td(tds[0])
+        move_type = self._extract_text_from_td(tds[1])
+        power = self._extract_text_from_td(tds[2])
+        accuracy = self._extract_text_from_td(tds[3])
+        pp = self._extract_text_from_td(tds[4])
 
         return move.Move(move_name, move_type, power, accuracy, pp)
 
