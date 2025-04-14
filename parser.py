@@ -67,8 +67,9 @@ class NationalDexListParser:
 
 
 class LearnsetParser:
-    def __init__(self, page_data):
+    def __init__(self, page_data, generation):
         self.page_data = page_data
+        self.generation = generation
     
     def make_learnset(self):
         soup = BeautifulSoup(self.page_data, 'html.parser')
@@ -109,13 +110,20 @@ class LearnsetParser:
         return td.text.replace('\n', '')
 
     def _make_move_from_td_list(self, tds):
+        power_index = 2
+        category = "N/A"
+        if self.generation > 3:
+            power_index += 1
+            category = self._extract_text_from_td(tds[2])
+
         move_name = self._extract_text_from_td(tds[0])
         move_type = self._extract_text_from_td(tds[1])
-        power = self._extract_text_from_td(tds[2])
-        accuracy = self._extract_text_from_td(tds[3])
-        pp = self._extract_text_from_td(tds[4])
 
-        return move.Move(move_name, move_type, power, accuracy, pp)
+        power = self._extract_text_from_td(tds[power_index + 0])
+        accuracy = self._extract_text_from_td(tds[power_index + 1])
+        pp = self._extract_text_from_td(tds[power_index + 2])
+
+        return move.Move(move_name, move_type, category, power, accuracy, pp)
 
 
     def _make_level_up_entry(self, tr_soup):

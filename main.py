@@ -51,7 +51,7 @@ for pokemon in pokemon_list:
         print(pokemon.learnset_link)
 
         learnset_page_data = pagegetter.get_page(pokemon.learnset_link)
-        learnset = parser.LearnsetParser(learnset_page_data).make_learnset()
+        learnset = parser.LearnsetParser(learnset_page_data, args.generation).make_learnset()
         print("Level Up")
         for entry in learnset.level_up:
             print(entry)
